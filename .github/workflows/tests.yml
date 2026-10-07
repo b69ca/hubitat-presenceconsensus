@@ -1,0 +1,22 @@
+name: Groovy tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Download Groovy 2.4.21
+        run: curl --fail --location --silent --show-error --output /tmp/groovy-all.jar https://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/2.4.21/groovy-all-2.4.21.jar
+      - name: Run driver tests
+        run: java -cp /tmp/groovy-all.jar groovy.ui.GroovyMain tests/PresenceConsensusTest.groovy
